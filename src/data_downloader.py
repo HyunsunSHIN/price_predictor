@@ -47,6 +47,7 @@ import pandas as pd
 def numpy_to_csv(item_numpy_list):
     df = pd.DataFrame(item_numpy_list)
     df.to_csv("tmp.csv",encoding='utf-8', header = False, index = False)
+    # 이와 같은 명령어로 tmp.csv에, item_numpy_list가 csv로 저장됨
 
 def item_writer(localcode, timecode, local_name):
     xml_string = query_sender(localcode, timecode)
