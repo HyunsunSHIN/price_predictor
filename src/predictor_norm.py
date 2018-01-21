@@ -229,6 +229,5 @@ if Test_flag:
     result_np = np.asarray(encoder_result, dtype=np.float32)
 
     print(result_np)
-    cost_of_test_result = np.mean(abs(result_np[:, 0] - result_np[:, 1]))
     print("encoder total cost: ", cost_of_test_result)
 

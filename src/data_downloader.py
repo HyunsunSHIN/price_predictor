@@ -1,3 +1,4 @@
+import numpy as np
 import urllib.request
 
 def query_sender(localcode, timecode):
@@ -36,16 +37,23 @@ def xml_to_item_list(xml_string,local_name, time_code):
     return result
 
 item_list = xml_to_item_list(xml_string,'11110','201612')
+
 from pprint import pprint
 pprint(item_list)
+item_numpy_list = np.array(item_list)
 
+import pandas as pd
 
-def item_writer(localcode, timecode, local_name, path):
+def numpy_to_csv(item_numpy_list):
+    df = pd.DataFrame(item_numpy_list)
+    df.to_csv("tmp.csv",encoding='utf-8', header = False, index = False)
+
+def item_writer(localcode, timecode, local_name):
     xml_string = query_sender(localcode, timecode)
     item_list = xml_to_item_list(xml_string, local_name, time_code)
     item_numpy_list = np.array(item_list)
-    numpy_appender(path, item_numpy_list)
-
+    #print(item_numpy_list)
+    numpy_to_csv(item_numpy_list)
 
 def timecode_generator(start_code, end_code):
     result = []
@@ -74,20 +82,13 @@ def timecode_generator(start_code, end_code):
 
     return result
 
-time_code_list = timecode_generator('200601', '201706')
+time_code_list = timecode_generator('200601', '200602')
+local_code = '11110'
+local_name = "서울특별시 종로구"
 
 for time_code in time_code_list:
+    print(time_code)
     time_code_str = str(time_code)
-    infile = codecs.open('./public_data/test.csv', 'r', encoding='utf-8')
-    path = './public_data_HS/total_result'
-    for line in infile:
-        line = line.replace(u'\xa0', ' ')
-        ss = line.split()
-        local_code = ss[1]
-        local_name = ss[2] + " " + ss[3]
-        item_writer(local_code, time_code_str, local_name, path)
-        print(ss)
-        print(ss[1])
-
-    infile.close()
-
+    path = './test'
+    item_writer(local_code, time_code_str, local_name)
+#이후 현재 디렉토리에 tmp.csv 파일에 데이터가 저장됨.
